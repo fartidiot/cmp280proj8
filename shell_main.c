@@ -85,6 +85,26 @@ void changeDir(char *newDirectory) {
 
 void execCommand(int argCount, char **arguments) {
     char *first = arguments[0];
+    for(int i = 0; i < arguments.length - 1; i++)
+    {
+      char *curr = arguments[i];
+      if(strcmp(curr, "<"))
+      {
+        FILE *input;
+        curr = arguments[i + 1];
+        input = open(curr,O_RDONLY);
+        dup2(input,STDIN_FILENO);
+        close(input);
+      }
+      else if(strcmp(curr, ">"))
+      {
+        curr = arguments[i+1];
+        FILE *output;
+        output = open(curr,O_WRONLY|O_CREAT);
+        dup2(output,STDOUT_FILENO);
+        close(output);
+      }
+    }
     if (strcmp(first, "cd") == 0) {
         if (argCount < 2) {
             changeDir(getenv("HOME"));
