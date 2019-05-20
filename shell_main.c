@@ -75,7 +75,7 @@ void changeDir(char *newDirectory) {
                 printf("location not found!\n");
                 break;
             default:
-                printf("cd failed do to an error\n");
+                printf("cd failed due to an error\n");
                 break;
         }
     } else {
@@ -93,6 +93,11 @@ void execCommand(int argCount, char **arguments) {
         FILE *input;
         curr = arguments[i + 1];
         input = open(curr,O_RDONLY);
+        if(input == NULL)
+        {
+          printf("Input file does not exist");
+          return;
+        }
         dup2(input,STDIN_FILENO);
         close(input);
       }
@@ -101,6 +106,11 @@ void execCommand(int argCount, char **arguments) {
         curr = arguments[i+1];
         FILE *output;
         output = open(curr,O_WRONLY|O_CREAT);
+        if(output == NULL)
+        {
+          printf("Could not create output file");
+          return;
+        }
         dup2(output,STDOUT_FILENO);
         close(output);
       }
@@ -189,3 +199,4 @@ int main(int argc, const char **argv) {
 
     }
 }
+
